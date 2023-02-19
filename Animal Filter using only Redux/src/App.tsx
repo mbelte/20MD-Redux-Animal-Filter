@@ -1,34 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import AddForm from "./components/AddForm";
+import AnimalsGrid from "./components/AnimalsGrid";
+import { changeModalState } from './features/animalSlice';
+import { useAppSelector, useAppDispatch } from "./hooks/hooks";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useAppDispatch()
+  const { animals, modalState } = useAppSelector((state) => state.animals);
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="content">
+        <div className="about">
+          <h1 className="about__heading">Animals list</h1>
+          <p className="about__text">
+            This is a simple exercise on React Redux combined with Local Storage
+          </p>
+          <button 
+            className="button"
+            onClick={() => {
+              dispatch(changeModalState())
+            }}
+          >
+            Add new animal
+          </button>
+        </div>
+
+        {
+          animals.length ? 
+            <AnimalsGrid animals={ animals } /> :
+            <p>There are no animals to show</p>
+        }
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+      {modalState && (
+        <div className="modal">
+          <AddForm />
+        </div>
+      )}
+      
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
